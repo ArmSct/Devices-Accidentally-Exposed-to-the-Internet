@@ -34,7 +34,8 @@ DeviceLogonEvents
 | summarize Attempts = count() by ActionType, RemoteIP, DeviceName
 | order by Attempts
 ```
-(SCREENSHOT OF LOGS)
+<img width="665" height="470" alt="p1" src="https://github.com/user-attachments/assets/78017aa7-b338-416a-b19e-1922b00bfa5c" />
+
 
 The top 5 most failed login attempt IP addresses have not been able to break into the VM.
 ```kql
@@ -44,7 +45,8 @@ DeviceLogonEvents
 | where ActionType == "LogonSuccess"
 | where RemoteIP has_any(RemoteIPsInQuestion)
 ```
-(SCREENSHOT OF LOGS = no results)
+<img width="865" height="571" alt="p2" src="https://github.com/user-attachments/assets/c83e1e60-f165-489f-bdf5-bc93ad61844a" />
+
 
 The only successful remote network logons in the last 30 days where from the "labuser" account (13).
 ```kql
@@ -72,7 +74,8 @@ DeviceLogonEvents
 | where AccountName  == "labuser"
 | summarize LoginCOunt = count() by DeviceName, ActionType, AccountName, RemoteIP
 ```
-(SCREENSHOT OF LOGS)
+<img width="860" height="352" alt="p3" src="https://github.com/user-attachments/assets/60caf637-2961-4115-8231-0e65045edc84" />
+
 
 Though the device was exposed to the internet and clear brute force attempts were made, there is no evidence of successful brute force attacks.
 
