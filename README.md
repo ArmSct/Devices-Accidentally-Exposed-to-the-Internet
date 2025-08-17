@@ -13,18 +13,19 @@ During routine maintenance, the security team is tasked with investigating any V
 ---
 ## Timeline Summary and Findings
 ---
-### Windows-target-1 has been internet facing for several days
-
+### Windows-target-1 has been internet facing for several days.
+```kql
 DeviceInfo
 | where DeviceName == "windows-target-1"
 | where IsInternetFacing == 1
 | order by Timestamp desc
+```
 
 Most recent Internet facing time:  2025-08-15T00:07:59.96698Z
 
 ---
 ### Several bad actors have been attempting to log into the target machine
-
+```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
 | where LogonType has_any("Network", "Interactive", "RemoteInteractive", "Unlock")
@@ -32,48 +33,48 @@ DeviceLogonEvents
 | where isnotempty(RemoteIP)
 | summarize Attempts = count() by ActionType, RemoteIP, DeviceName
 | order by Attempts
-
+```
 (SCREENSHOT OF LOGS)
 
 ---
 ### The top 5 most failed login attempt IP addresses have not been able to break into the VM
-
+```kql
 let RemoteIPsInQuestion = dynamic(["59.3.82.127","57.129.140.32", "204.157.179.2", "45.150.128.246", "172.201.61.84"]);
 DeviceLogonEvents
 | where LogonType has_any("Network", "Interactive", "RemoteInteractive", "Unlock")
 | where ActionType == "LogonSuccess"
 | where RemoteIP has_any(RemoteIPsInQuestion)
-
+```
 (SCREENSHOT OF LOGS = no results)
 
 ---
 ### The only successful remote network logons in the last 30 days where from the "labuser" account (13).
-
+```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
 | where LogonType == "Network"
 | where ActionType == "LogonSuccess"
 | summarize count()
-
+```
 ---
 ### There were zero (0) failed logons for the "labuser" account, indicating there were no brute force attempts.
-
+```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
 | where LogonType == "Network"
 | where ActionType == "LogonFailed"
 | where AccountName  == "labuser"
-
+```
 ---
 ### Checked all successful login IP addresses for labuser, did not find any unusual of unexpected locations.
-
+```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
 | where LogonType == "Network"
 | where ActionType == "LogonSuccess"
 | where AccountName  == "labuser"
 | summarize LoginCOunt = count() by DeviceName, ActionType, AccountName, RemoteIP
-
+```
 (SCREENSHOT OF LOGS)
 
 ---
