@@ -12,8 +12,8 @@ During routine maintenance, the security team is tasked with investigating any V
 
 ---
 ## Timeline Summary and Findings
----
-### Windows-target-1 has been internet facing for several days.
+
+Windows-target-1 has been internet facing for several days.
 ```kql
 DeviceInfo
 | where DeviceName == "windows-target-1"
@@ -23,8 +23,8 @@ DeviceInfo
 
 Most recent Internet facing time:  2025-08-15T00:07:59.96698Z
 
----
-### Several bad actors have been attempting to log into the target machine
+
+Several bad actors have been attempting to log into the target machine
 ```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
@@ -36,8 +36,7 @@ DeviceLogonEvents
 ```
 (SCREENSHOT OF LOGS)
 
----
-### The top 5 most failed login attempt IP addresses have not been able to break into the VM
+The top 5 most failed login attempt IP addresses have not been able to break into the VM.
 ```kql
 let RemoteIPsInQuestion = dynamic(["59.3.82.127","57.129.140.32", "204.157.179.2", "45.150.128.246", "172.201.61.84"]);
 DeviceLogonEvents
@@ -47,8 +46,7 @@ DeviceLogonEvents
 ```
 (SCREENSHOT OF LOGS = no results)
 
----
-### The only successful remote network logons in the last 30 days where from the "labuser" account (13).
+The only successful remote network logons in the last 30 days where from the "labuser" account (13).
 ```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
@@ -56,8 +54,8 @@ DeviceLogonEvents
 | where ActionType == "LogonSuccess"
 | summarize count()
 ```
----
-### There were zero (0) failed logons for the "labuser" account, indicating there were no brute force attempts.
+
+There were zero (0) failed logons for the "labuser" account, indicating there were no brute force attempts.
 ```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
@@ -65,8 +63,7 @@ DeviceLogonEvents
 | where ActionType == "LogonFailed"
 | where AccountName  == "labuser"
 ```
----
-### Checked all successful login IP addresses for labuser, did not find any unusual of unexpected locations.
+Checked all successful login IP addresses for labuser, did not find any unusual of unexpected locations.
 ```kql
 DeviceLogonEvents
 | where DeviceName == "windows-target-1"
@@ -77,18 +74,17 @@ DeviceLogonEvents
 ```
 (SCREENSHOT OF LOGS)
 
----
-### Though the device was exposed to the internet and clear brute force attempts were made, there is no evidence of successful brute force attacks.
+Though the device was exposed to the internet and clear brute force attempts were made, there is no evidence of successful brute force attacks.
 
 ---
-### Response Actions:
+## Response Actions:
 
 Hardened the NSG attached to windows-target-1 to allow only RDP traffic from specific endpoints (no public internet access)
 Implemented account lockout policy
 Implemented MFA
 
 ---
-### Relevant MITRE ATT&CK TTPs:
+Relevant MITRE ATT&CK TTPs:
 
 - T1595.001 – Active Scanning: Scanning IP Blocks  
   Internet-facing system attracted external probing.
