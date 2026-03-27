@@ -13,7 +13,7 @@ During routine maintenance, the security team is tasked with investigating any V
 ---
 ## Timeline Summary and Findings
 
-Windows-target-1 has been internet facing for several days.
+Windows-target-1 has been internet facing for several days. 
 ```kql
 DeviceInfo
 | where DeviceName == "windows-target-1"
