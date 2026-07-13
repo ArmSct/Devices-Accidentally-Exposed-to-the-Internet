@@ -4,7 +4,7 @@
 ## Platforms and Languages Leveraged
 - Windows 10 Virtual Machines (Microsoft Azure)
 - EDR Platform: Microsoft Defender for Endpoint 
-- Kusto Query Language (KQL)
+- Kusto Query Language (KQL) 
 
 ## Scenario
 
